@@ -276,7 +276,7 @@ body.kb .wrap{padding-top:6px}body.kb .below{margin-top:6px}body.kb #qText{font-
       <details class="how">
         <summary>HOW_TO_PLAY.TXT</summary>
         <p>Pick your industry and fight your way past three villains with film trivia from 1995 to today. Every right answer is a punch. Every wrong answer, or running out of time, means your hero takes a hit.</p>
-        <p>Level 1 needs 4 punches, level 2 needs 6, and the final boss needs 8. You have 5 lives against each villain. Lose them all and you're knocked out.</p>
+        <p>Level 1 needs 4 punches, level 2 needs 6, and the final boss needs 8. You have 3 lives against each villain. Lose them all and you're knocked out.</p>
         <p>When a villain is one punch from going down, you get a FINISHER: type the answer yourself to land the knockout.</p>
       </details>
     </section>
@@ -742,7 +742,7 @@ function SEL_IND(){return S?S.ind:SEL}
 function drawSetting(level,ind,cam,t){if(level===2)drawDocks(cam,t);else if(level===3)drawDen(cam,t);else drawWorld(ind,cam,t)}
 
 /* =================== TRIVIA BOXING =================== */
-const NEED=[0,4,6,8], HEARTS=5, T_MC=15, T_TYPE=25;
+const NEED=[0,4,6,8], HEARTS=3, T_MC=15, T_TYPE=25;
 const VILL={};VILL.bollywood=[null,
  {name:"Pappu Pehelwan",title:"THE STREET BRAWLER",skin:"#9a6440",hair:"#111111",shirt:"#c0402a",sleeve:"skin",pants:"#3a3040",mus:true,bulk:true,boss:true,hs:"bald",band:"#ffd23a"},
  {name:"Johnny Thapa",title:"THE DOCK SMUGGLER",skin:"#a87048",hair:"#141414",shirt:"#e8e2d0",jacket:"#2c3e5a",pants:"#1c2430",shades:true,stub:true,coat:true,boss:true,hs:"long"},
