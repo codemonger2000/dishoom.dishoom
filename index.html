@@ -434,12 +434,34 @@ function fmt(n){return n.toLocaleString('en-IN')}
 
 /* ---------------- sound ---------------- */
 let AC=null,muted=!!LS.get('dd-mute');
+function noiseBurst(t,dur,peak,freq,q){try{const n=AC.sampleRate*dur;const buf=AC.createBuffer(1,n,AC.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+ const src=AC.createBufferSource();src.buffer=buf;const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=freq;f.Q.value=q||1;const g=AC.createGain();
+ src.connect(f);f.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(peak,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);src.start(t);src.stop(t+dur)}catch(e){}}
 function snd(type){if(muted)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime;const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);
- if(type==='hit'){o.type='square';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(40,t+.18);g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.start(t);o.stop(t+.21)}
+ if(type==='hit'){o.type='square';o.frequency.setValueAtTime(190,t);o.frequency.exponentialRampToValueAtTime(38,t+.14);g.gain.setValueAtTime(.22,t);g.gain.exponentialRampToValueAtTime(.001,t+.17);o.start(t);o.stop(t+.18);noiseBurst(t,.08,.3,1500,.7)}
  else if(type==='ok'){o.type='square';o.frequency.setValueAtTime(440,t);o.frequency.setValueAtTime(660,t+.08);g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.start(t);o.stop(t+.21)}
  else if(type==='bad'){o.type='sawtooth';o.frequency.setValueAtTime(140,t);g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.start(t);o.stop(t+.19)}
- else if(type==='mass'){o.type='triangle';[330,440,550,880].forEach((f,i)=>o.frequency.setValueAtTime(f,t+i*.09));g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.5);o.start(t);o.stop(t+.5)}
+ else if(type==='mass'){o.type='triangle';[330,440,550,880].forEach((f,i)=>o.frequency.setValueAtTime(f,t+i*.09));g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.5);o.start(t);o.stop(t+.5);
+  const b=AC.createOscillator(),bg=AC.createGain();b.type='square';b.frequency.setValueAtTime(160,t);b.frequency.exponentialRampToValueAtTime(30,t+.3);b.connect(bg);bg.connect(AC.destination);bg.gain.setValueAtTime(.3,t);bg.gain.exponentialRampToValueAtTime(.001,t+.32);b.start(t);b.stop(t+.33);
+  noiseBurst(t,.22,.4,900,.5)}
 }catch(e){}}
+
+/* ---------------- level music (tempo rises each level) ---------------- */
+const MUS_PAT=[0,0,7,5,0,0,10,7];
+let MUSIC={on:false,step:0,bpm:104,timer:null};
+function musicBpmFor(lv){return lv>=3?152:lv===2?126:104}
+function musicStep(){
+ if(!MUSIC.on||muted){MUSIC.timer=null;return}
+ try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime,dur=60/MUSIC.bpm/2;
+  const semis=MUS_PAT[MUSIC.step%MUS_PAT.length],freq=110*Math.pow(2,semis/12);
+  const o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=freq;o.connect(g);g.connect(AC.destination);
+  g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+dur*.85);o.start(t);o.stop(t+dur*.9);
+  if(MUSIC.step%4===0){const o2=AC.createOscillator(),g2=AC.createGain();o2.type='triangle';o2.frequency.value=freq/2;o2.connect(g2);g2.connect(AC.destination);g2.gain.setValueAtTime(.04,t);g2.gain.exponentialRampToValueAtTime(.001,t+dur*1.6);o2.start(t);o2.stop(t+dur*1.6)}
+  MUSIC.step++;MUSIC.timer=setTimeout(musicStep,dur*1000)}catch(e){MUSIC.timer=null}
+}
+function startMusic(lv){MUSIC.bpm=musicBpmFor(lv);if(MUSIC.on)return;MUSIC.on=true;MUSIC.step=0;if(!MUSIC.timer)musicStep()}
+function setMusicLevel(lv){MUSIC.bpm=musicBpmFor(lv)}
+function stopMusic(){MUSIC.on=false;if(MUSIC.timer){clearTimeout(MUSIC.timer);MUSIC.timer=null}}
 
 
 
@@ -722,7 +744,7 @@ VILL.kollywood=[null,
 VILL.tollywood=[null,
  {name:"Guntur Gopi",title:"THE FACTION GOON",skin:"#8a5634",hair:"#111111",shirt:"#f2efe6",sleeve:"skin",lower:"lungi",lungi:"#f2efe6",lungi2:"#c22222",mus:true,bulk:true,boss:true,hs:"short",band:"#c22222"},
  {name:"Katti Rangadu",title:"THE SMUGGLER",skin:"#9a6440",hair:"#141414",shirt:"#3a2a5a",jacket:"#1a1a1a",pants:"#1a1a1a",stub:true,shades:true,coat:true,boss:true,hs:"spiky"},
- vb('tollywood',"Kaala Bhupathi","THE WARLORD")];
+ vb('tollywood',"Simha Bhupathi","THE WARLORD")];
 VILL.mollywood=[null,
  {name:"Kallan Kuttan",title:"THE TODDY SHOP BULLY",skin:"#a87048",hair:"#111111",shirt:"#3f8a8a",sleeve:"skin",lower:"lungi",lungi:"#f4f1e8",lungi2:"#3f8a8a",mus:true,bulk:true,boss:true,hs:"short"},
  {name:"Kappal Thomas",title:"THE PORT SMUGGLER",skin:"#9a6440",hair:"#141414",shirt:"#e8e2d0",jacket:"#2c4a3a",pants:"#1c2430",shades:true,beard:true,coat:true,boss:true,hs:"long"},
@@ -737,7 +759,7 @@ const LIVE=Object.keys(QBS);
 const SAVE=ind=>`ddb7-${TODAY}-${ind}`;
 
 let MODE='menu',SEL=LS.get('dd-sel')||'bollywood',S=null,RES=null,T=0;
-function setMode(m){MODE=m;document.body.classList.toggle('ingame',m==='game');if(m!=='game')$('.crt').style.maxWidth='';$('#pMenu').classList.toggle('hidden',m!=='menu');$('#pGame').classList.toggle('hidden',m!=='game');$('#pRes').classList.toggle('hidden',m!=='results');document.body.classList.remove('kb');window.scrollTo(0,0)}
+function setMode(m){MODE=m;document.body.classList.toggle('ingame',m==='game');if(m!=='game')$('.crt').style.maxWidth='';$('#pMenu').classList.toggle('hidden',m!=='menu');$('#pGame').classList.toggle('hidden',m!=='game');$('#pRes').classList.toggle('hidden',m!=='results');document.body.classList.remove('kb');window.scrollTo(0,0);$('#tStart').lastChild.textContent=m==='results'?'MENU':m==='game'?'QUIT':'START'}
 function setAcc(ind){document.documentElement.style.setProperty('--acc',INDUSTRIES[ind].acc)}
 function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=(r()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}return a}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -769,7 +791,7 @@ function startRun(ind,practice){
  VILLAINS=VILL[ind];const pools=makePools(ind,practice,r);
  S={ind,practice,pools,r,hero:heroOf(ind),lv:1,vhp:NEED[1],hp:HEARTS,log:[],phase:'intro',introT:2.6,q:null,left:0,
   anim:{who:null,t:0},pops:[],shake:0,flash:0,vFall:null,hFall:null,id:Math.random()};
- setMode('game');introText();$('#opts').innerHTML='';$('#fb').textContent='';$('#fb').className='';
+ setMode('game');introText();startMusic(1);$('#opts').innerHTML='';$('#fb').textContent='';$('#fb').className='';
  $('#tbar').classList.add('off');$('#tfill').style.width='100%';$('#tnum').textContent='';$('#fin').classList.add('hidden');$('#qLbl').textContent=practice?'PRACTICE ROUND':INDUSTRIES[ind].name.toUpperCase();
  $('#ans').blur();
 }
@@ -820,9 +842,10 @@ function resolve(ok,given,right,timeout){
 }
 function villainDown(){S.phase='ko';S.vFall={t:0};snd('mass');$('#ans').blur();
  const id=S.id;setTimeout(()=>{if(!S||S.id!==id)return;
-  if(S.lv===3)finish(true);else{S.lv++;S.vhp=NEED[S.lv];S.hp=HEARTS;S.vFall=null;S.phase='intro';S.introT=2.6;introText();$('#opts').innerHTML='';$('#fin').classList.add('hidden');$('#fb').textContent=''}},2000)}
+  if(S.lv===3)finish(true);else{S.lv++;setMusicLevel(S.lv);S.vhp=NEED[S.lv];S.hp=HEARTS;S.vFall=null;S.phase='intro';S.introT=2.6;introText();$('#opts').innerHTML='';$('#fin').classList.add('hidden');$('#fb').textContent=''}},2000)}
 function heroDown(){S.phase='ko';S.hFall={t:0};$('#ans').blur();const id=S.id;setTimeout(()=>{if(S&&S.id===id)finish(false)},2200)}
 function finish(won){
+ stopMusic();
  const rec={day:DAY,ind:S.ind,won,beaten:won?3:S.lv-1,lv:S.lv,log:S.log,hero:S.hero.name};
  if(!S.practice)LS.set(SAVE(S.ind),rec);
  const p=S.practice;S=null;showResults(rec,p)}
@@ -845,10 +868,10 @@ $('#copy').onclick=()=>{const t=$('#rShare').textContent;const done=()=>{$('#cop
 function fallbackCopy(t,done){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){}ta.remove()}
 $('#again').onclick=()=>{unlockAudio();startRun(SEL,true)};
 $('#back').onclick=()=>{setMode('menu');select(SEL)};
-$('#quit').onclick=()=>{if(!S)return;$('#ans').blur();if(S.practice){S=null;setMode('menu');select(SEL);return}
+$('#quit').onclick=()=>{if(!S)return;$('#ans').blur();if(S.practice){stopMusic();S=null;setMode('menu');select(SEL);return}
  if(S.phase==='ko')return;S.id=-1;finish(false)};
 function muteLabel(){$('#mute').textContent=muted?'♪ SOUND OFF':'♪ SOUND ON'}
-$('#mute').onclick=()=>{muted=!muted;LS.set('dd-mute',muted);muteLabel()};muteLabel();
+$('#mute').onclick=()=>{muted=!muted;LS.set('dd-mute',muted);muteLabel();if(!muted&&MUSIC.on&&!MUSIC.timer)musicStep()};muteLabel();
 
 /* everything (screen + question + answers) fits one viewport: shrink the TV, never scroll */
 function fitGame(){const crt=$('.crt');if(MODE!=='game'){crt.style.maxWidth='';return}
