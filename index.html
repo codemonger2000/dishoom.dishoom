@@ -99,6 +99,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .tbar i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--yellow);border-right:2.5px solid var(--ink);transition:none}
 .tbar.low i{background:var(--red)}
 .tbar span{position:absolute;right:9px;top:0;line-height:15px;font:12px/15px 'Bungee',sans-serif;color:var(--ink)}
+.tbar span i{font-size:.72em;font-style:normal}
 .tbar.low{animation:pulse .5s infinite alternate}.tbar.off{opacity:.45}
 @keyframes pulse{to{box-shadow:0 0 0 3px var(--red)}}
 .crt.hit{animation:sh .3s}
@@ -892,7 +893,7 @@ function tick(sec){if(muted)return;try{AC=AC||new (window.AudioContext||window.w
 function timerTick(){if(!S||MODE!=='game')return;const bar=$('#tbar');
  if(S.phase!=='q'){bar.classList.add('off');bar.classList.remove('low');return}
  S.left=Math.max(0,(S.deadline-performance.now())/1000);const s=Math.ceil(S.left);
- bar.classList.remove('off');bar.classList.toggle('low',S.left<=5);$('#tfill').style.width=(100*S.left/S.total)+'%';$('#tnum').textContent=s+'s';
+ bar.classList.remove('off');bar.classList.toggle('low',S.left<=5);$('#tfill').style.width=(100*S.left/S.total)+'%';$('#tnum').innerHTML=s+'<i>s</i>';
  if(s!==S.lastSec){S.lastSec=s;if(s<=5&&s>0)tick(s)}
  if(S.left<=0)timeUp()}
 setInterval(timerTick,100);
