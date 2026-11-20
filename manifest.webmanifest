@@ -1,0 +1,14 @@
+{
+  "name": "Dishoom Dishoom",
+  "short_name": "Dishoom Dishoom",
+  "description": "A daily trivia-boxing game across Bollywood, Kollywood, Tollywood, Mollywood and Sandalwood cinema.",
+  "start_url": "/dishoom.dishoom/",
+  "scope": "/dishoom.dishoom/",
+  "display": "standalone",
+  "background_color": "#efe2c6",
+  "theme_color": "#ff3d7f",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
