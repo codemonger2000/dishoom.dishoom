@@ -433,7 +433,7 @@ const MILESTONES=[];
 const $=s=>document.querySelector(s);
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 function istDate(){return new Date(Date.now()+5.5*3600e3).toISOString().slice(0,10)}
-const LAUNCH="2026-11-20";
+const LAUNCH="2026-11-19";
 function dayNum(d){return Math.max(1,Math.round((Date.parse(d)-Date.parse(LAUNCH))/864e5)+1)}
 const TODAY=istDate(), DAY=dayNum(TODAY);
 function rng(seed){let s=seed>>>0||1;return()=>{s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0;return s/4294967296}}
