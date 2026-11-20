@@ -1290,7 +1290,10 @@ setInterval(sideBits,1000);
  const start=Math.max(1,day-10),g=$('#calG');let html='';for(let i=0;i<21;i++){const n=start+i,x=22+(i%7)*26,y=140+Math.floor(i/7)*38;if(n>new Date(d.getFullYear(),d.getMonth()+1,0).getDate())break;
   if(n===day)html+=`<circle cx="${x+9}" cy="${y-6}" r="15" fill="none" stroke="#e8435a" stroke-width="3"/>`;html+=`<text x="${x+9}" y="${y}" text-anchor="middle" fill="${i%7===6?'#e8435a':'#2f6be6'}">${n}</text>`}
  g.innerHTML=html}catch(e){}})();
-const _setMode=setMode;setMode=function(m){_setMode(m);document.body.classList.toggle('res',m==='results');reqFit()};
+const _setMode=setMode;setMode=function(m){const prev=MODE;_setMode(m);document.body.classList.toggle('res',m==='results');reqFit();
+ try{if(m==='game'&&prev!=='game')history.pushState({mode:'game'},'',location.href);else if(m!=='game')history.replaceState({mode:m},'',location.href)}catch(e){}};
+/* browser/device back button: always return to the main menu rather than resuming a quit game */
+addEventListener('popstate',()=>{closeArc();if(S){stopMusic();S=null}RES=null;setMode('menu');select(SEL)});
 
 /* taskbar START: starts the fight from the menu, quits a fight, leaves the results */
 $('#tStart').onclick=()=>{closeArc();if(MODE==='menu')go();else if(MODE==='game')$('#quit').click();else $('#back').click()};
