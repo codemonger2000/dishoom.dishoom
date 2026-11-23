@@ -88,6 +88,13 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .inds{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 .inds button{background:var(--cream);border:var(--o);border-radius:99px;color:var(--ink);cursor:pointer;padding:6px 14px 5px;font:13px/1.1 'Bungee',sans-serif;text-align:center;box-shadow:var(--sh)}
 .inds button small{display:block;font:700 10px/1.2 'Bricolage Grotesque',sans-serif;letter-spacing:.06em;margin-top:2px;opacity:.7}
+.inds{flex-direction:column;align-items:stretch;gap:8px}
+.inds button{display:flex;justify-content:space-between;align-items:center;text-align:left;border-radius:12px;padding:9px 14px 8px;font-size:15px}
+.inds button small{margin:0;font-size:11px}
+#pMenu{display:flex;flex-direction:column}
+#pMenu .start{display:none}
+#cv.btn{cursor:pointer}
+.howbody{padding:4px 14px 12px;overflow:auto;font-size:15px}.howbody p{margin:9px 0}
 .inds button.on{background:var(--acc);transform:translate(-1px,-2px);box-shadow:4px 5px 0 var(--ink)}
 .inds button:disabled{cursor:default;opacity:.45}
 .start{display:block;margin:16px auto 0;background:var(--yellow);color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:12px 30px 11px;font:18px/1 'Bungee',sans-serif;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
@@ -195,7 +202,7 @@ body.ingame #tArc{display:none}
 .taskbar .chip i{width:12px;height:12px;display:inline-block;background:conic-gradient(var(--pink) 0 25%,var(--green) 0 50%,#6fb7ff 0 75%,var(--yellow) 0);border:1.5px solid var(--ink);border-radius:2px}
 .taskbar .sp{flex:1}
 .taskbar>*{white-space:nowrap}
-@media (max-width:640px){.taskbar #clock{display:none}.taskbar .chip,.taskbar button{font-size:11px;padding:4px 6px 3px}}
+@media (max-width:640px){.taskbar #clock{display:none}.taskbar .chip,.taskbar button{font-size:11px;padding:4px 6px 3px}.taskbar{gap:4px}.taskbar .w{display:none}}
 .taskbar button{background:var(--cream);border:2px solid var(--ink);border-radius:5px;padding:4px 8px 3px;cursor:pointer;font:12px/1 'Bungee',sans-serif}
 .taskbar #clock{padding:4px 8px 3px;border:2px solid rgba(27,21,48,.35);border-radius:5px}
 body.ingame .below{margin-top:10px}body.ingame #qText{margin:8px 0 10px}
@@ -206,7 +213,7 @@ body.kb .wrap{padding-top:6px}body.kb .below{margin-top:6px}body.kb #qText{font-
  .below{margin-top:0}body.ingame .below{margin-top:0}.taskbar{grid-column:1/-1;margin-top:12px}
  .opts{grid-template-columns:1fr}.opt{min-height:50px}
  #qText{font-size:21px;min-height:3.75em}
- .inds{justify-content:flex-start}.start{margin:16px 0 0;width:100%}.how{margin-top:14px}
+ .start{margin:16px 0 0;width:100%}#pMenu{height:100%}#pMenu .inds{flex:1;max-height:430px}#pMenu .inds button{flex:1;font-size:16px;padding:6px 16px;border-radius:14px}#pMenu .inds button small{font-size:11px}
 }
 @media (max-width:640px){
  html,body{font-size:15px}
@@ -220,10 +227,11 @@ body.kb .wrap{padding-top:6px}body.kb .below{margin-top:6px}body.kb #qText{font-
  .chin{display:none}
  .opt{font-size:15px;padding:9px 10px;min-height:50px}.opts{gap:8px}
  #qText{margin:8px 0 10px}
- .inds{gap:6px}.inds button{font-size:12px;padding:5px 10px 4px}
+ .inds{gap:5px}.inds button{font-size:12px;padding:5px 10px 4px;border-radius:10px}.inds button small{font-size:10px}
 }
 @media (max-width:640px) and (max-height:700px){body.ingame .taskbar{display:none}body.ingame .below{padding-bottom:9px}body.ingame #qText{min-height:0}}
 @media (orientation:landscape) and (max-height:520px){
+ .inds{gap:4px}.inds button{padding:3px 10px 2px;font-size:11px}.inds button small{font-size:9px}
  .wrap{max-width:none;padding:8px 12px}
  .monitor{padding:8px 7px 7px}.chin{display:none}body.ingame .taskbar{display:none}.badge{display:none}
  .bezel{padding:6px}.screen{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:0 14px;padding:8px 8px 0}
@@ -287,18 +295,15 @@ body.kb .wrap{padding-top:6px}body.kb .below{margin-top:6px}body.kb #qText{font-
   <div class="sticker s2" aria-hidden="true">BEAT THE BOSS!</div>
   <div class="bezel"><div class="screen">
   <div class="arc hidden" id="arc"><div class="arcwin"><div class="arcbar"><span id="arcT">ARCHIVES</span><button id="arcX" aria-label="Close">✕</button></div><ol id="arcList"></ol></div></div>
+  <div class="arc hidden" id="how"><div class="arcwin"><div class="arcbar"><span>HOW_TO_PLAY.TXT</span><button id="howX" aria-label="Close">✕</button></div><div class="howbody"><p>Pick your industry and fight your way past three villains with film trivia from 1995 to today. Every right answer is a punch. Every wrong answer, or running out of time, means your hero takes a hit.</p>
+        <p>Level 1 needs 4 punches, level 2 needs 6, and the final boss needs 8. You have 3 lives against each villain. Lose them all and you're knocked out.</p>
+        <p>When a villain is one punch from going down, you get a FINISHER: type the answer yourself to land the knockout.</p></div></div></div>
   <div class="crt"><canvas id="cv" width="1152" height="648"></canvas></div>
   <div class="below">
     <section id="pMenu">
       <div class="inds" id="inds"></div>
       <button class="start" id="start">PRESS START</button>
       <div class="meta hidden" id="meta"></div>
-      <details class="how">
-        <summary>HOW_TO_PLAY.TXT</summary>
-        <p>Pick your industry and fight your way past three villains with film trivia from 1995 to today. Every right answer is a punch. Every wrong answer, or running out of time, means your hero takes a hit.</p>
-        <p>Level 1 needs 4 punches, level 2 needs 6, and the final boss needs 8. You have 3 lives against each villain. Lose them all and you're knocked out.</p>
-        <p>When a villain is one punch from going down, you get a FINISHER: type the answer yourself to land the knockout.</p>
-      </details>
     </section>
     <section id="pGame" class="hidden">
       <div class="top"><span id="qLbl"></span><button class="quit" id="quit">✕ QUIT</button></div>
@@ -326,7 +331,7 @@ body.kb .wrap{padding-top:6px}body.kb .below{margin-top:6px}body.kb #qText{font-
       <div id="rLog" class="rlog"></div>
     </section>
   </div>
-  <div class="taskbar"><button class="chip" id="tStart"><i></i>START</button><button class="chip" id="tArc">▤ ARCHIVES</button><span class="sp"></span><button id="mute"></button><span id="clock"></span></div>
+  <div class="taskbar"><button class="chip" id="tStart"><i></i>START</button><button class="chip" id="tArc">▤ ARCHIVES</button><button class="chip" id="tHow">? HOW TO<span class="w"> PLAY</span></button><span class="sp"></span><button id="mute"></button><span id="clock"></span></div>
   </div></div>
   <div class="chin" aria-hidden="true">
    <svg class="dot" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="#ffd23f" stroke="#1b1530" stroke-width="2.5"/><circle cx="11" cy="12" r="1.8" fill="#1b1530"/><circle cx="19" cy="12" r="1.8" fill="#1b1530"/><path d="M9 17c3 5 9 5 12 0" fill="none" stroke="#1b1530" stroke-width="2.2" stroke-linecap="round"/></svg>
@@ -840,7 +845,7 @@ function select(k){SEL=k;setAcc(k);[...$('#inds').children].forEach(b=>b.classLi
  $('#start').textContent=done?"SEE TODAY'S RESULT":'PRESS START'}
 function go(){unlockAudio();snd('ok');const done=LS.get(SAVE(SEL));if(done)showResults(done,false);else startRun(SEL,false)}
 $('#start').onclick=go;
-cv.addEventListener('click',()=>{if(MODE==='menu')go();else if(MODE==='game'&&S&&S.phase==='intro')S.introT=Math.min(S.introT,.25)});
+cv.addEventListener('click',()=>{if(MODE==='game'&&S&&S.phase==='intro')S.introT=Math.min(S.introT,.25)});
 document.addEventListener('keydown',e=>{
  if(MODE==='menu'&&e.key==='Enter'){go();e.preventDefault();return}
  if(MODE==='game'&&S&&S.phase==='q'&&!S.q.t){const n='1234'.indexOf(e.key);if(n>=0){pick(n);e.preventDefault()}}
@@ -1047,6 +1052,7 @@ function nightSky(){if(SKY)return SKY;const c=document.createElement('canvas');c
  const ridge=(base,amp,col,seed)=>{const rr=rng(seed);let y=base;k.fillStyle=col;for(let x=0;x<W;x++){y+=(rr()-.5)*amp;y=Math.max(base-12,Math.min(base+4,y));k.fillRect(x,y|0,1,H-(y|0))}};
  ridge(92,2.2,'#2a1038',7);ridge(98,2.6,'#160a20',11);
  return SKY={c,stars}}
+let PILL=null;
 function renderMenu(){
  const S0=nightSky();cx.drawImage(S0.c,0,0);
  for(const s of S0.stars){const tw=s.tw?(Math.sin(T*3+s.b*20)+1)/2:1;cx.fillStyle=s.b>.85?`rgba(255,240,200,${tw})`:`rgba(230,220,255,${(.35+s.b*.5)*tw})`;cx.fillRect(s.x,s.y,1,1);if(s.b>.94&&tw>.6){cx.fillStyle=`rgba(255,255,255,${tw*.5})`;cx.fillRect(s.x-1,s.y,3,1);cx.fillRect(s.x,s.y-1,1,3)}}
@@ -1296,9 +1302,9 @@ function renderMenu(){
  cx.drawImage(skyCanvas('menu','#2f6be6','#4479ec',H,.55),0,0,W,H);
  const sr=rng(7);for(let i=0;i<14;i++){const x=sr()*W,y=sr()*H,tw=.5+.5*Math.sin(T*2.4+i*1.7);star4(cx,x,y,1+2.2*tw*(i%3?1:1.5),i%4?'rgba(246,234,208,.85)':'#ffd23f')}
  popWord(cx,'DISHOOM',W/2,25,25,CRM,2.6);popWord(cx,'DISHOOM',W/2,52,25,'#ffd23f',2.6);
- const lab=INDUSTRIES[SEL].name.toUpperCase()+' TRIVIA FIGHT',lw=textW(lab,.85)+16;pill(W/2-lw/2,69,lw,11,getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#ff5d8f');ctextP(lab,71.6,INK,.85);
+ const done=!!LS.get(SAVE(SEL)),lab=INDUSTRIES[SEL].name.toUpperCase()+(done?' · SEE RESULT':' TRIVIA FIGHT'),lw=textW(lab,.85)+16,pz=Math.sin(T*4)>0?1:0;
+ PILL={x:W/2-lw/2,y:69,w:lw,h:11};pill(PILL.x,PILL.y+1.6,lw,11,INK);pill(PILL.x,PILL.y-pz*.6,lw,11,getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#ff5d8f');ctextP(lab,71.6-pz*.6,INK,.85);
  const bw=86,bx=W/2-bw/2,by=86;boxO(cx,bx,by,bw,7,CRM,1,.9);const seg=12,fill=Math.floor((T*6)%(seg+4));for(let i=0;i<Math.min(seg,fill);i++)boxO(cx,bx+2+i*6.9,by+1.6,5.6,3.8,INK,.4,0);
- if(Math.floor(T*1.6)%2===0)ctextP('TAP TO FIGHT',97.5,CRM,.8);
 }
 function renderResults(){
  const rec=RES.rec,won=rec.won;
@@ -1348,7 +1354,7 @@ addEventListener('popstate',()=>{closeArc();if(S){stopMusic();S=null}RES=null;se
 /* taskbar START: starts the fight from the menu, quits a fight, leaves the results */
 $('#tStart').onclick=()=>{closeArc();if(MODE==='menu')go();else if(MODE==='game')$('#quit').click();else $('#back').click()};
 /* archives: every finished daily fight saved on this device */
-function closeArc(){$('#arc').classList.add('hidden')}
+function closeArc(){$('#arc').classList.add('hidden');$('#how').classList.add('hidden')}
 function openArc(){const ind=SEL,L=$('#arcList');
  $('#arcT').textContent=INDUSTRIES[ind].name.toUpperCase()+' ARCHIVES';
  const rows=[];for(let d=DAY;d>=1;d--){const date=dateForDay(d),rec=LS.get(`ddb7-${date}-${ind}`);rows.push({d,date,rec})}
@@ -1371,6 +1377,10 @@ function openArcDay(day){const ind=SEL,date=dateForDay(day),rec=LS.get(`ddb7-${d
  $('#arc').classList.remove('hidden')}
 $('#tArc').onclick=()=>{$('#arc').classList.contains('hidden')?openArc():closeArc()};
 $('#arcX').onclick=closeArc;
+const pillHit=e=>{if(MODE!=='menu'||!PILL)return false;const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;return x>=PILL.x-3&&x<=PILL.x+PILL.w+3&&y>=PILL.y-3&&y<=PILL.y+PILL.h+4};
+cv.addEventListener('click',e=>{if(pillHit(e))go()});
+cv.addEventListener('mousemove',e=>cv.classList.toggle('btn',pillHit(e)));
+$('#tHow').onclick=()=>{const o=!$('#how').classList.contains('hidden');closeArc();if(!o)$('#how').classList.remove('hidden')};$('#howX').onclick=closeArc;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeArc()});
 /* no repeats inside one fight: once an answer has come up (MC or typed), skip any later question with the same answer */
 function qKeys(q){return (q.c?[q.c[0]]:q.t).map(norm)}
